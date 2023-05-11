@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+
+  # inside of services section, we define Docker containers that we want to run
+  web:                  # defining the first service with "web" as a name
+    image: odoo:16.0    # specifies which Docker image to use (we can find them on hub.docker.com, <image_name>:<tag(version)>)
+    depends_on:         # specifies that the service depends on "mydb" service. This means that the "mydb" service will start before the "web" service
+      - mydb
+    ports:
+      - "8069:8069"     # this maps the container_port 8069 to host_port 8069. That means you can access the Odoo app by accessing http://localhost:8069/ in a web browser
+
+    volumes:
+      # - odoo-web-data:/var/lib/odoo # This syntax refers to a named volume in Docker. It means that Docker will create a named volume called "odoo-web-data" and mount it at the "/var/lib/odoo" directory inside the container. Named volumes are managed by Docker and persist even if the container is removed. This allows data to be stored outside of the container and be reused across container restarts or when scaling the application.
+      - ./data:/var/lib/odoo          # This syntax refers to a bind mount in Docker. It means that Docker will mount the local directory "./data" at the "/var/lib/odoo" directory inside the container. Changes made in either location will be reflected in both places (deleting, recreating...). Bind mounts are useful for development and testing environments where you want to have direct access to the files on the host machine.
+      - ./config:/etc/odoo            # This allows you to provide configuration files for the Odoo server, such as odoo.conf, which would be placed in the ./config directory on the host machine. This is useful when you want to modify the Odoo server configuration, or use custom modules.
+      - ./addons:/mnt/extra-addons    # This allows you to add custom modules to the Odoo server. Any Python module placed in the ./addons directory on the host machine will be available in the /mnt/extra-addons directory inside the container.
+    environment:        # The environment section in the Docker Compose file defines a set of environment variables that are passed to the Odoo and Postgres containers. Environment variables are used to provide configuration values that can be used by the containers at runtime. When the Odoo container starts, it uses these environment variables to connect to the Postgres container and to configure the Odoo application. For example, the HOST variable tells Odoo where to find the Postgres database, and the USER and PASSWORD variables provide the database credentials for the Odoo application to connect to the database. (optional, they're set by default)
+      - HOST=mydb
+      - USER=odoo
+      - PASSWORD=myodoo
+
+  mydb:
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD=myodoo
+
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+
+# odoo-web-data:/var/lib/odoo vs ./data:/var/lib/odoo: In summary, using a named volume ("odoo-web-data:/var/lib/odoo") allows Docker to manage the volume's lifecycle and provides better portability and data persistence. On the other hand, using a bind mount ("./data:/var/lib/odoo") gives you more control over the data and allows for direct manipulation of files on the host machine. The choice between the two depends on your specific use case and requirements. Using a Docker volume is recommended for production deployments because it provides data persistence, making it possible to maintain data integrity and recover data in case of system failures or container crashes.
