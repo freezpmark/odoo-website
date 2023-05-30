@@ -2,6 +2,9 @@
 
 ### In Progress
 
+- [ ] Resolve how to get theme content inside the website.. it stopped working
+- [ ] Add debugger
+- [ ] Add pylint + scoring
 - [ ] Make something accessible by any user outside of the website
 - [ ] Other app integrations:
   - [ ] Discord
