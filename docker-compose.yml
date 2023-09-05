@@ -27,6 +27,6 @@ services:
       - POSTGRES_USER=odoo
 
     volumes:
-      - ./data/db:/var/lib/postgresql/data/pgdata  # simply said in general, <local_path>: <docker_path>, we can save database with command: docker cp odoo_freezpmark-db-1:/var/lib/postgresql/data <local_path>; but its better to make dump with docker exec -t odoo_freezpmark-db-1 pg_dump -U odoo postgres > backup_file.sqls,,, originally was without pgdata
+      - ./data/db:/var/lib/postgresql/data  # simply said in general, <local_path>: <docker_path>, we can save database with command: docker cp odoo_freezpmark-db-1:/var/lib/postgresql/data <local_path>; but its better to make dump with docker exec -t odoo_freezpmark-db-1 pg_dump -U odoo postgres > backup_file.sqls,,, by default there should be /pgdata appended...
 
 # odoo-web-data:/var/lib/odoo vs ./data:/var/lib/odoo: In summary, using a named volume ("odoo-web-data:/var/lib/odoo") allows Docker to manage the volume's lifecycle and provides better portability and data persistence. On the other hand, using a bind mount ("./data:/var/lib/odoo") gives you more control over the data and allows for direct manipulation of files on the host machine. The choice between the two depends on your specific use case and requirements. Using a Docker volume is recommended for production deployments because it provides data persistence, making it possible to maintain data integrity and recover data in case of system failures or container crashes.
