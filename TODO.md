@@ -13,6 +13,7 @@
 ### Todo
 
 - [ ] Implement something to showcase my skills (look what I did in O2 and 26H)
+- [ ] Custom Theme Preview Image (Thumbnail) https://www.odoo.com/forum/website-builder-12/custom-theme-preview-image-thumbnail-180687
   - [ ] wizard from O2
   - [ ] fillpdf, reports...
 
